@@ -1,7 +1,8 @@
-#include "Buffer.h";
+//#include "Buffer.h";
+//#include "Simulatir.h"
 #include <iostream>
 int main() {
-	Buffer b;
+	/*Buffer b;
 	unsigned char contents[]{ "lll" };
 	b.addToBuffer(contents);
 	b.addToBuffer(contents);
@@ -9,5 +10,7 @@ int main() {
 	for (int i = 0; i < 2; i++)
 	{
 		std::cout << buffers[i] << '\n';
-	}
+	}*/
+	//Simulatir s;
+	std::cout << "i do it!!";
 }

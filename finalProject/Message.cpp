@@ -14,7 +14,7 @@ BaseMessage::BaseMessage(int type, int id) {
 	messageBuffer = 0;
 }
 BaseMessage::~BaseMessage() {
-	delete[] messageBuffer;
+	//delete[] messageBuffer;
 }
 unsigned char*  BaseMessage::getMessageBuffer() {
 	return messageBuffer;

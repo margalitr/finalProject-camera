@@ -10,9 +10,10 @@ private:
 public:
 	Simulatir();
 	void start(int numOffCamera);
-
 };
-
+void stopCamera(Camera camera);
+void runCamera(Camera camera);
+void sendCamereToServer(Camera camera, int time);
 #endif // !SIMULATIR
 
 
