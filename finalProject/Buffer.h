@@ -5,7 +5,6 @@
 class Buffer
 {
 private:
-	std::mutex m;
 	unsigned char** buffer;
 	int i =0;
 public:

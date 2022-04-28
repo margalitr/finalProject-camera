@@ -3,14 +3,17 @@
 #define CAMARA
 #include "Message.h"
 #include "Buffer.h"
+#include <mutex>
+
 class Camera
 {
 
 private:
 	static char numOfCameras;
+	static std::mutex m;
 	char id;
 	BaseMessage** messages;
-	int indexMessages=0;
+	int indexMessages1;
 	Buffer buffer;
 	bool isActive;
 public:

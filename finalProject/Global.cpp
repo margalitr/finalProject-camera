@@ -1,4 +1,4 @@
-#include "Random.h"
+#include "Global.h"
 #include <iostream>
 #include <random>
 
@@ -10,3 +10,4 @@ float getProb(int min, int max) {
 
 	return _dist(mt);
 }
+

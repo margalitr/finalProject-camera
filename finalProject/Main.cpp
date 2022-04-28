@@ -1,5 +1,5 @@
 //#include "Buffer.h";
-//#include "Simulatir.h"
+#include "Simulatir.h"
 #include <iostream>
 int main() {
 	/*Buffer b;
@@ -11,6 +11,6 @@ int main() {
 	{
 		std::cout << buffers[i] << '\n';
 	}*/
-	//Simulatir s;
+	Simulatir s(10);
 	std::cout << "i do it!!";
 }

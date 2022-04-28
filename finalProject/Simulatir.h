@@ -6,14 +6,19 @@
 class Simulatir
 {
 private:
-	Camera camers[2];
+
+	Camera* cameras;
 public:
-	Simulatir();
-	void start(int numOffCamera);
+	Simulatir(int numOfCamera);
+	void startSimulatir(int numOfCamera);
+	~Simulatir();
+	void sendCamereToServer(Camera * camera, int time);
+
+
 };
 void stopCamera(Camera camera);
 void runCamera(Camera camera);
-void sendCamereToServer(Camera camera, int time);
+
 #endif // !SIMULATIR
 
 
