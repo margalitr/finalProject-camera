@@ -11,6 +11,6 @@ int main() {
 	{
 		std::cout << buffers[i] << '\n';
 	}*/
-	Simulatir s(10);
+	Simulatir s(1);
 	std::cout << "i do it!!";
 }

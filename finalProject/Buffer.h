@@ -7,6 +7,7 @@ class Buffer
 private:
 	unsigned char** buffer;
 	int i =0;
+	bool notEmptyBuffer = false;
 public:
 	Buffer();
 	~Buffer();

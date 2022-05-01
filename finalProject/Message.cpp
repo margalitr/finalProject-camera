@@ -6,7 +6,7 @@
 BaseMessage::BaseMessage(unsigned char* buffer, int id) {
 	this->messageBuffer = buffer;
 	this->messageId = id;
-	messageType = static_cast<int>(buffer[1]);
+	messageType = static_cast<int>(*buffer);
 }
 BaseMessage::BaseMessage(int type, int id) {
 	this->messageType = type;

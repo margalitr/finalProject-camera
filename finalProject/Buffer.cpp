@@ -11,6 +11,7 @@ Buffer::~Buffer() {
 }
 void Buffer::addToBuffer(unsigned char* newBuffer) {
 	mutexOfBuffer.lock();
+	notEmptyBuffer = true;
 	buffer = (unsigned char**)realloc(buffer, ++i * sizeof(unsigned char*));
 	if (!buffer) {
 		mutexOfBuffer.unlock();
@@ -21,12 +22,16 @@ void Buffer::addToBuffer(unsigned char* newBuffer) {
 }
 unsigned char** Buffer::getBuffer() {
 	//mutexOfBuffer.lock();
-	unsigned char** bufferNow= buffer;
+	if (!notEmptyBuffer)
+		return NULL;
+	//unsigned char** bufferNow= buffer;
 	//mutexOfBuffer.unlock();
 	return buffer;
 }
 void Buffer::cleanBuffer() {
+
 	mutexOfBuffer.lock();
+	notEmptyBuffer = false;
 
 	//std::cout << "----------------------i= " << i << '\n';
 
