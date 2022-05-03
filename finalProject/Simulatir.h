@@ -18,6 +18,7 @@ public:
 };
 void stopCamera(Camera camera);
 void runCamera(Camera camera);
+void sending(char*, int);
 
 #endif // !SIMULATIR
 

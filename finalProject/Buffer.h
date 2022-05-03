@@ -8,7 +8,9 @@ private:
 	unsigned char** buffer;
 	int i =0;
 	bool notEmptyBuffer = false;
+
 public:
+	 std::mutex mutexOfBuffer;
 	Buffer();
 	~Buffer();
 	void addToBuffer(unsigned char* newBuffer);

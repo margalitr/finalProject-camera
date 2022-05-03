@@ -7,7 +7,7 @@
 
 Buffer::~Buffer() {
 	cleanBuffer();
-
+	free(buffer);
 }
 void Buffer::addToBuffer(unsigned char* newBuffer) {
 	mutexOfBuffer.lock();
@@ -30,7 +30,7 @@ unsigned char** Buffer::getBuffer() {
 }
 void Buffer::cleanBuffer() {
 
-	mutexOfBuffer.lock();
+	//mutexOfBuffer.lock();
 	notEmptyBuffer = false;
 
 	//std::cout << "----------------------i= " << i << '\n';
@@ -44,7 +44,7 @@ void Buffer::cleanBuffer() {
 	free(buffer);
 
 	buffer = (unsigned char**)malloc(sizeof(unsigned char*));
-	mutexOfBuffer.unlock();
+	//mutexOfBuffer.unlock();
 
 	//buffer = (unsigned char**)realloc(buffer, sizeof(unsigned char*));
 

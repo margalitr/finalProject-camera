@@ -21,6 +21,7 @@ public:
 	~Camera();
 	void stop();
 	void run();
+	void connectToServer();
 	void sendToBuffer();
 	void generate();
 	void sendToServer();

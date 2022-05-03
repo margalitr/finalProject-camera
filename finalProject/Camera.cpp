@@ -1,14 +1,22 @@
-#include "Camera.h"
-#include "Global.h"
-//#include <stdlib.h>
+#define _WINSOCK_DEPRECATED_NO_WARNINGS
+#pragma comment (lib, "Ws2_32.lib")
+#include <iostream>
+#include <string.h>
+#include <sstream>
+#include <WinSock2.h>
+#include <WS2tcpip.h>
 #include <stdio.h>
 #include <iostream>
 #include <thread>
+#include "Camera.h"
+#include "Global.h"
+using namespace std;
 
 char Camera::numOfCameras = 97;
 std::mutex Camera::m;
 using namespace std::literals::chrono_literals;
-
+void sending(unsigned char* buffer, int* typeOfMeassage);
+SOCKET connection;
 Camera::Camera() {
 	m.lock();
 	id = Camera::numOfCameras;
@@ -39,9 +47,6 @@ void Camera::sendToBuffer() {
 	{
 		messages[i]->parseBack();
 		buffer.addToBuffer(messages[i]->getMessageBuffer());
-		//std::cout << "sendToBuffer camera id= " << id << '\n';
-		//std::cout << "buffer  is ";
-		//buffer.print();
 		delete messages[i];
 	}
 
@@ -51,13 +56,12 @@ void Camera::sendToBuffer() {
 }
 void Camera::generate() {
 	int count = getProb(1, 6);
-	//std::cout << "generate camera id= " << id << ", count " << count << '\n';
 	while (count--) {
 		int id = indexMessages1 + 1;
 		BaseMessage* newMessage;
 		int type = getProb(1, 3);
 		if (type == 1) {
-			short status = getProb(1, 5);
+			short status = getProb(1, 3);
 			newMessage = new StatusMessage(id, status);
 		}
 		else {
@@ -65,7 +69,6 @@ void Camera::generate() {
 			float angle = getProb(0, 360);
 			float speed = getProb(0, 1000);
 			newMessage = new DiscoverMessage(id, distance, angle, speed);
-			//std::cout << "index is " << indexMessages1 << '\n';
 		}
 		BaseMessage** tmpMassages = (BaseMessage**)realloc(messages, sizeof(BaseMessage*) * (indexMessages1 + 1));
 		int cnt = 0;
@@ -80,56 +83,80 @@ void Camera::generate() {
 				}
 			}
 		}
-			messages = tmpMassages;
-			messages[indexMessages1] = newMessage;
-			std::cout << "generate messages is ";
-			messages[indexMessages1]->print();
-			indexMessages1++;
-		}
+		messages = tmpMassages;
+		messages[indexMessages1] = newMessage;
+		std::cout << "generate messages is ";
+		messages[indexMessages1]->print();
+		indexMessages1++;
 	}
+}
 
 
 void Camera::sendToServer() {
-
-	//send to server:
-	//buffer.getBuffer();
 	std::cout << "send to server id=" << id << "\n ";
-	//unsigned char** prevBuffer=memcpy(prevBuffer,buffer.getBuffer(),sizeof(unsigned char**)* buffer.getNumOfMessage());
-	mutexOfBuffer.lock();
+	buffer.mutexOfBuffer.lock();
 	int prevSizeOfBuffer = buffer.getNumOfMessage();
 	for (int i = 0; i < prevSizeOfBuffer; i++)
 	{
-	if (buffer.getBuffer() != NULL) {
-		//std::cout << " buffer " << buffer.getBuffer();// [i] ;
-		int typeOfMeassage=0;
-		memcpy((void*)(&typeOfMeassage), (void*)(buffer.getBuffer()[i]), 2);
-		BaseMessage* message;
-		//std::cout << "typeOfMeassage; " << typeOfMeassage<<" (buffer.getBuffer():"<< buffer.getBuffer()[0] << buffer.getBuffer()[1];
-		if (typeOfMeassage == 1) {
-			message = new StatusMessage(buffer.getBuffer()[i], 5);
-			//message = new StatusMessage(*buffer.getBuffer(), 5);
-			//std::cout << "error";
+		if (buffer.getBuffer() != NULL) {
+			int typeOfMeassage = 0;
+			memcpy((void*)(&typeOfMeassage), (void*)(buffer.getBuffer()[i]), 2);
+			if (buffer.getBuffer()[i])
+				sending(buffer.getBuffer()[i], &typeOfMeassage);
+			BaseMessage* message;
+			if (typeOfMeassage == 1) {
+				message = new StatusMessage(buffer.getBuffer()[i], 5);
+			}
+			else {
+				message = new DiscoverMessage(buffer.getBuffer()[i], 5);
+			}
+			message->parseMessage();
+			std::cout << "message translate:";
+			message->print();
+			std::cout << '\n';
 		}
-		else {
-			message = new DiscoverMessage(buffer.getBuffer()[i], 5);
-		}
-		message->parseMessage();
-		std::cout << "message translate:";
-		message->print();
-		// prevSizeOfBuffer = buffer.getNumOfMessage();
-		std::cout << '\n';
 	}
-	
-	}
-buffer.cleanBuffer();
-mutexOfBuffer.unlock();
-	
-
+	buffer.cleanBuffer();
+	buffer.mutexOfBuffer.unlock();
 }
 bool Camera::getIsActive() {
-
 	return isActive;
 }
 Camera::~Camera() {
 	sendToBuffer();
+	closesocket(connection);
+	WSACleanup();
+}
+
+
+void sending(unsigned char* buffer, int* typeOfMeassage)
+{
+	int size;
+	if (*typeOfMeassage == 1) {
+		size = 3;
+	}
+	else
+		size = 14;
+	send(connection, reinterpret_cast<char*>(buffer), size, 0);
+}
+void Camera::connectToServer() {
+	WSAData wsaData;
+	WORD DllVersion = MAKEWORD(2, 1);
+	if (WSAStartup(DllVersion, &wsaData) != 0) {
+		cout << "Winsock Connection Failed!" << endl;
+	}
+	SOCKADDR_IN addr;
+	int addrLen = sizeof(addr);
+	IN_ADDR ipvalue;
+	connection = socket(AF_INET, SOCK_STREAM, NULL);
+	addr.sin_addr.s_addr = inet_addr("127.0.0.1");
+	addr.sin_port = htons(80);
+	addr.sin_family = AF_INET;
+	if (connect(connection, (SOCKADDR*)&addr, addrLen) == 0) {
+		cout << "Connected!" << endl;
+	}
+	else {
+		cout << "Error Connecting to Host" << endl;
+		exit(1);
+	}
 }
