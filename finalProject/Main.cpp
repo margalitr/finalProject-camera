@@ -1,7 +1,16 @@
 //#include "Buffer.h";
 #include "Simulatir.h"
 #include <iostream>
+#include "Global.h"
+#include "Simulatir.h"
+#include "readConfig.h"
+
+
+
+
+
 int main() {
-	Simulatir s(10);
-	std::cout << "i do it!!";
+	connectToServer();
+	Simulatir s(getNumCamera());
+	std::cout << "i did it!!";
 }

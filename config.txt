@@ -1,0 +1,4 @@
+numofcamera=10
+time=3
+ip=3000
+port=80

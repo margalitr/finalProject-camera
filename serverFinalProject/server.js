@@ -26,7 +26,7 @@ server.listen(port, function () {
 server.on('connection', function (socket) {
     console.log('A new connection has been established.');
     socket.on('data', function (chunk) {
-        console.log(`Data received from client: ${chunk.toString()}.`);
+     //   console.log(`Data received from client: ${chunk.toString()}.`);
         parseBuffer(chunk);
     });
     socket.on('close', function () {

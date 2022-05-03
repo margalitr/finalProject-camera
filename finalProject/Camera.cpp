@@ -16,7 +16,7 @@ char Camera::numOfCameras = 97;
 std::mutex Camera::m;
 using namespace std::literals::chrono_literals;
 void sending(unsigned char* buffer, int* typeOfMeassage);
-SOCKET connection;
+
 Camera::Camera() {
 	m.lock();
 	id = Camera::numOfCameras;
@@ -124,8 +124,7 @@ bool Camera::getIsActive() {
 }
 Camera::~Camera() {
 	sendToBuffer();
-	closesocket(connection);
-	WSACleanup();
+	
 }
 
 
@@ -138,25 +137,5 @@ void sending(unsigned char* buffer, int* typeOfMeassage)
 	else
 		size = 14;
 	send(connection, reinterpret_cast<char*>(buffer), size, 0);
-}
-void Camera::connectToServer() {
-	WSAData wsaData;
-	WORD DllVersion = MAKEWORD(2, 1);
-	if (WSAStartup(DllVersion, &wsaData) != 0) {
-		cout << "Winsock Connection Failed!" << endl;
-	}
-	SOCKADDR_IN addr;
-	int addrLen = sizeof(addr);
-	IN_ADDR ipvalue;
-	connection = socket(AF_INET, SOCK_STREAM, NULL);
-	addr.sin_addr.s_addr = inet_addr("127.0.0.1");
-	addr.sin_port = htons(80);
-	addr.sin_family = AF_INET;
-	if (connect(connection, (SOCKADDR*)&addr, addrLen) == 0) {
-		cout << "Connected!" << endl;
-	}
-	else {
-		cout << "Error Connecting to Host" << endl;
-		exit(1);
-	}
+	
 }
