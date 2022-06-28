@@ -5,9 +5,7 @@
 #include "Buffer.h"
 #include <mutex>
 
-class Camera
-{
-
+class Camera {
 private:
 	static char numOfCameras;
 	static std::mutex m;
@@ -16,12 +14,12 @@ private:
 	int indexMessages1;
 	Buffer buffer;
 	bool isActive;
+
 public:
 	Camera();
 	~Camera();
 	void stop();
 	void run();
-	//void connectToServer();
 	void sendToBuffer();
 	void generate();
 	void sendToServer();

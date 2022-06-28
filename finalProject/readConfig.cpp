@@ -1,48 +1,47 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-using namespace std;
 #include "readConfig.h"
-int numOfCameras;
-int timeToCamera;
-bool reading = false;
-void readConfig() {
-	fstream newfile;
+using namespace std;
 
-	newfile.open("../config.txt", ios::in);
-	if (newfile.is_open()) {
+ReadConfig* ReadConfig::instance = 0;
+
+ReadConfig* ReadConfig::getReadInstance() {
+	if (ReadConfig::instance == NULL) {
+		ReadConfig::instance = new ReadConfig();
+	}
+	return instance;
+}
+
+ReadConfig::ReadConfig() {
+	fstream file;
+	file.open("../config.txt", ios::in);
+	if (file.is_open()) {
 		string tp;
-		getline(newfile, tp);
-			cout << tp << "\n";
+		getline(file, tp);
 		int startindex = tp.find('=');
-		numOfCameras = stoi(tp.substr(startindex+1,tp.length()- startindex));
-		cout << numOfCameras << "\n";
-		getline(newfile, tp);
-			cout << tp << "\n";
+		numOfCameras = stoi(tp.substr(startindex + 1, tp.length() - startindex));
+		getline(file, tp);
 		startindex = tp.find('=');
 		timeToCamera = stoi(tp.substr(startindex + 1, tp.length() - startindex));
-
-		cout << timeToCamera << "\n";
-
-
-		newfile.close(); //close the file object.
-		reading = true;
+		getline(file, tp);
+		startindex = tp.find('=');
+		port = stoi(tp.substr(startindex + 1, tp.length() - startindex));
+		file.close();
 	}
-
-
 	else {
 		cout << "where is the file?\n I didnt find it.";
 	}
 }
-int getNumCamera() {
-	if (!reading) {
-		readConfig();
-	}
+
+int ReadConfig::getNumCamera() {
 	return numOfCameras;
 }
-int getTime() {
-	if (!reading) {
-		readConfig();
-	}
+
+int ReadConfig::getTime() {
 	return timeToCamera;
+}
+
+int ReadConfig::getPort() {
+	return port;
 }

@@ -6,6 +6,7 @@ protected:
 	unsigned char* messageBuffer;
 	int messageId;
 	int messageType;
+
 public:
 	BaseMessage(unsigned char* buffer, int id);
 	BaseMessage(int type, int id);
@@ -16,9 +17,11 @@ public:
 	unsigned char* getMessageBuffer();
 
 };
+
 class StatusMessage :public BaseMessage {
 protected:
 	short status;
+
 public:
 	StatusMessage(unsigned char* buffer, int id) ;
 	StatusMessage(int id, short status) ;
@@ -26,6 +29,7 @@ public:
 	virtual void parseBack();
 	virtual void print();
 };
+
 class DiscoverMessage :public BaseMessage {
 protected:
 	float distance;

@@ -10,14 +10,14 @@ private:
 	bool notEmptyBuffer = false;
 
 public:
-	 std::mutex mutexOfBuffer;
+	std::mutex mutexOfBuffer;
 	Buffer();
 	~Buffer();
 	void addToBuffer(unsigned char* newBuffer);
 	unsigned char** getBuffer();
 	void cleanBuffer();
 	int getNumOfMessage();
-	void print();
+	
 };
 
 #endif // !Buffer1

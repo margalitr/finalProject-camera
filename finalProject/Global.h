@@ -7,10 +7,7 @@
 #include <WS2tcpip.h>
 
 float getProb(int min,int max);
-static std::mutex mutexConnection;
 extern SOCKET connection ;
-//static bool ezer = false;
-//static bool* connectionWork; 
 void connectToServer();
 
 #endif // !RANDOM

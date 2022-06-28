@@ -27,6 +27,7 @@ Camera::Camera() {
 	indexMessages1 = 0;
 	messages = (BaseMessage**)malloc(sizeof(BaseMessage*));
 }
+
 void Camera::stop() {
 	isActive = false;
 }
@@ -34,14 +35,13 @@ void Camera::stop() {
 void Camera::run() {
 	while (isActive) {
 		generate();
-
 		if (isActive) {
 			sendToBuffer();
 		}
 		std::this_thread::sleep_for(std::chrono::milliseconds(10));
-
 	}
 }
+
 void Camera::sendToBuffer() {
 	for (int i = 0; i < indexMessages1; i++)
 	{
@@ -49,11 +49,11 @@ void Camera::sendToBuffer() {
 		buffer.addToBuffer(messages[i]->getMessageBuffer());
 		delete messages[i];
 	}
-
 	free(messages);
 	messages = 0;
 	indexMessages1 = 0;
 }
+
 void Camera::generate() {
 	int count = getProb(1, 6);
 	while (count--) {
@@ -93,7 +93,6 @@ void Camera::generate() {
 
 
 void Camera::sendToServer() {
-	std::cout << "send to server id=" << id << "\n ";
 	buffer.mutexOfBuffer.lock();
 	int prevSizeOfBuffer = buffer.getNumOfMessage();
 	for (int i = 0; i < prevSizeOfBuffer; i++)
@@ -101,8 +100,9 @@ void Camera::sendToServer() {
 		if (buffer.getBuffer() != NULL) {
 			int typeOfMeassage = 0;
 			memcpy((void*)(&typeOfMeassage), (void*)(buffer.getBuffer()[i]), 2);
-			if (buffer.getBuffer()[i])
+			if (buffer.getBuffer()[i]) {
 				sending(buffer.getBuffer()[i], &typeOfMeassage);
+			}
 			BaseMessage* message;
 			if (typeOfMeassage == 1) {
 				message = new StatusMessage(buffer.getBuffer()[i], 5);
@@ -119,14 +119,14 @@ void Camera::sendToServer() {
 	buffer.cleanBuffer();
 	buffer.mutexOfBuffer.unlock();
 }
+
 bool Camera::getIsActive() {
 	return isActive;
 }
+
 Camera::~Camera() {
 	sendToBuffer();
-	
 }
-
 
 void sending(unsigned char* buffer, int* typeOfMeassage)
 {
@@ -137,5 +137,4 @@ void sending(unsigned char* buffer, int* typeOfMeassage)
 	else
 		size = 14;
 	send(connection, reinterpret_cast<char*>(buffer), size, 0);
-	
 }

@@ -33,10 +33,7 @@
     <ClCompile Include="Simulatir.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="help.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="readConfig.cpp">
+    <ClCompile Include="ReadConfig.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -56,7 +53,7 @@
     <ClInclude Include="Simulatir.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="readConfig.h">
+    <ClInclude Include="ReadConfig.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
